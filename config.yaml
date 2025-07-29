@@ -1,0 +1,7 @@
+retrieval:
+  provider: faiss
+  index_path: index/faiss.index
+  metadata_path: index/metadata.json
+  top_k: 5
+  normalize: true
+  metric: cosine   # or l2
