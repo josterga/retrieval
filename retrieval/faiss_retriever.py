@@ -1,8 +1,8 @@
 import faiss
 import json
 import numpy as np
-from .base import BaseRetriever
-from .utils import normalize_embeddings
+from retrieval.base import BaseRetriever
+from retrieval.utils import normalize_embeddings
 
 class FAISSRetriever(BaseRetriever):
     def __init__(self, config):
