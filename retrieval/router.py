@@ -1,5 +1,5 @@
 import yaml
-from retrieval.faiss_retriever import FAISSRetriever
+from .faiss_retriever import FAISSRetriever
 
 def load_retrieval_config(path="config.yaml"):
     with open(path, "r") as f:
