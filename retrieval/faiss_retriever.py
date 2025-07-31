@@ -5,16 +5,24 @@ from .base import BaseRetriever
 from .utils import normalize_embeddings
 
 class FAISSRetriever(BaseRetriever):
-    def __init__(self, config):
+    def __init__(self, config, index=None, metadata=None):
         self.index_path = config["index_path"]
         self.metadata_path = config["metadata_path"]
         self.top_k = config.get("top_k", 5)
         self.metric = config.get("metric", "cosine")
         self.normalize = config.get("normalize", True)
 
-        self.index = faiss.read_index(self.index_path)
-        with open(self.metadata_path) as f:
-            self.metadata = json.load(f)
+        if index is not None and metadata is not None:
+            self.index = index
+            self.metadata = metadata
+        else:
+            self.index = faiss.read_index(self.index_path)
+            with open(self.metadata_path) as f:
+                self.metadata = json.load(f)
+
+    @classmethod
+    def from_loaded(cls, index, metadata, config):
+        return cls(config=config, index=index, metadata=metadata)
 
     def query(self, query_embedding, top_k=None):
         top_k = top_k or self.top_k
