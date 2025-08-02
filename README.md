@@ -1,45 +1,33 @@
-# Retrieval System
+# `retrieval` — FAISS-based Vector Retrieval
 
-This project implements a retrieval system using FAISS for efficient similarity search over vector embeddings.
+- **Description:**  
+  Vector search over embeddings using FAISS, with metadata support.
+- **Entrypoint:**  
+  `from retrieval.faiss_retriever import FaissRetriever`
+- **Configurable Arguments:**
+  - `config_path`: Path to YAML config.
+  - Or pass config dict directly (see below).
 
-## Features
+- **Configurable Options (YAML):**
+  - `provider`, `index_path`, `metadata_path`, `top_k`, `normalize`, `metric`
 
-- Vector search using FAISS (supports cosine and L2 metrics)
-- Configurable via `config.yaml`
-- Metadata support
+- **Example:**
+  ```python
+  from retrieval.faiss_retriever import FaissRetriever
+  retriever = FaissRetriever(config_path="config.yaml")
+  results = retriever.query("your query here")
+  ```
 
-## Configuration
+  - **Cache-Friendly:**
+```from retrieval.faiss_retriever import FaissRetriever
+import faiss, json
 
-Edit `config.yaml` to set parameters such as:
-- `provider`: Retrieval backend (default: `faiss`)
-- `index_path`: Path to the FAISS index file
-- `metadata_path`: Path to the metadata JSON file
-- `top_k`: Number of top results to return
-- `normalize`: Whether to normalize vectors
-- `metric`: Similarity metric (`cosine` or `l2`)
+# Load once
+index = faiss.read_index("data/index.faiss")
+with open("data/metadata.json") as f:
+    metadata = json.load(f)
 
-Example:
-```yaml
-retrieval:
-  provider: faiss
-  index_path: index/faiss.index
-  metadata_path: index/metadata.json
-  top_k: 5
-  normalize: true
-  metric: cosine
+# Reuse across retrievers
+retriever = FaissRetriever.from_loaded(index=index, metadata=metadata, config=config)
+results = retriever.query(query_embedding)
 ```
-
-## Usage
-
-Import and use the retriever in your Python code:
-
-```python
-from retrieval.faiss_retriever import FaissRetriever
-
-retriever = FaissRetriever(config_path="config.yaml")
-results = retriever.query("your query here")
-```
-
-## License
-
-MIT License
